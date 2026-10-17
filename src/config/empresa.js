@@ -1,0 +1,45 @@
+// Configuración del negocio (cliente).
+// Para adaptar el sistema a otro cliente, cambia solo este archivo y el logo en /public.
+
+// TODO: completar con los datos reales de DistriDaniels
+export const EMPRESA = {
+  nombreCorto: 'DistriDaniels',
+  nombreLegal: 'DISTRIDANIELS', // Nombre que sale en la factura / cuenta de cobro
+  nit: '000000000-0',
+  // Líneas de contacto que se imprimen debajo del NIT en la factura
+  contactos: [
+    'Ciudad Cel. 300 000 0000'
+  ],
+  logo: '/logo-empresa.svg',
+  // Medios de pago que se imprimen en el pie de la factura
+  mediosPago: [
+    { nombre: 'NEQUI Y DAVIPLATA', numero: '0000000000' },
+    { nombre: 'BANCOLOMBIA AHORROS', numero: '00000000000' }
+  ]
+};
+
+// Vendedores: nombre y número de WhatsApp (con indicativo 57, sin espacios).
+export const VENDEDORES = [
+  { nombre: 'Anderson Perez', whatsapp: '573223092094' },
+  // TODO: quitar antes de entregar al cliente
+  { nombre: 'Pruebas - Edwin', whatsapp: '573004583117' }
+];
+
+// Personas que aparecen al registrar gastos
+export const EMPLEADOS_GASTOS = ['Anderson Perez', 'Otro'];
+
+// Claves para acciones protegidas (eliminar productos, editar/eliminar abonos)
+export const CLAVES_ADMIN = ['edwin', '777'];
+
+// Usuarios con menú de acceso especial (ventas, facturas y rutas de cobro)
+export const ACCESO_ESPECIAL = {
+  ids: [2],
+  usernames: ['alan diaz']
+};
+
+// Firma del desarrollador (se mantiene en todos los clientes)
+export const DESARROLLADOR = {
+  marca: 'e-business store (EBS)',
+  nombre: 'Ing. Edwin Marín',
+  telefono: '3004583117'
+};

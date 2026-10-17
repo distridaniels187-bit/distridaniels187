@@ -1,0 +1,263 @@
+.factura-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: 'Roboto', sans-serif;
+  color: #2d3748;
+}
+
+.factura-container h1 {
+  color: #1a365d;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #2b6cb0;
+}
+
+.datos-factura {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.fila-datos {
+  display: flex;
+  gap: 30px;
+}
+
+.columna-datos {
+  flex: 1;
+}
+
+.datos-factura p {
+  margin: 10px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.datos-factura b {
+  color: #2b6cb0;
+  min-width: 80px;
+  display: inline-block;
+}
+
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.tabla-productos th {
+  background-color: #2b6cb0;
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+.tabla-productos td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tabla-productos tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.total {
+  text-align: right;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ebf4ff;
+  border-radius: 6px;
+}
+
+.total h3 {
+  color: #1a365d;
+  font-size: 18px;
+}
+
+.botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.boton-volver, .boton-guardar {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.boton-volver {
+  background-color: #f03506;
+  color: white;
+}
+
+.boton-volver:hover {
+  background-color: #994238;
+}
+
+.boton-guardar {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.boton-guardar:hover {
+  background-color: #2c5282;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .fila-datos {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .factura-container {
+    padding: 20px;
+  }
+  
+  .botones {
+    flex-direction: column;
+  }
+  
+  .boton-volver, .boton-guardar {
+    width: 100%;
+  }
+}/* Estilos para la sección de movimientos de inventario */
+.seccion-inventario {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.seccion-inventario h3 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.tabla-movimientos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tabla-movimientos th {
+  background-color: #e9ecef;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tabla-movimientos td {
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tabla-movimientos tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.badge.salida {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #fed7d7;
+}
+
+.info-movimiento {
+  background-color: white;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid #38a169;
+}
+
+.info-movimiento p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Mejoras responsivas */
+@media (max-width: 768px) {
+  .tabla-movimientos {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .seccion-inventario {
+    padding: 10px;
+  }
+  
+  .tabla-movimientos th,
+  .tabla-movimientos td {
+    padding: 8px 5px;
+    font-size: 14px;
+  }
+}/* Agrega esto al archivo FacturaPreview.css */
+.numero-factura-preview {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 2px solid #3498db;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.numero-factura-preview span {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.boton-guardar {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.boton-guardar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #229954, #1e8449);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+}
+
+.boton-guardar:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

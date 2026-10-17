@@ -1,0 +1,15 @@
+{
+  "name": "DistriDaniels - Catálogo",
+  "short_name": "DistriDaniels",
+  "description": "Catálogo digital y pedidos por WhatsApp",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f4f7",
+  "theme_color": "#1f56d3",
+  "lang": "es",
+  "icons": [
+    { "src": "/logo-empresa.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

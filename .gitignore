@@ -1,0 +1,27 @@
+# Variables de entorno (claves de Supabase, Cloudinary)
+.env
+.env.*
+!.env.example
+
+# Llaves SSH: nunca subir
+keys/
+
+# Respaldos de base de datos (contienen datos de clientes)
+backup*.sql
+*.dump
+backup_*.zip
+backups/
+zips/
+
+# Dependencias y compilados
+node_modules/
+scripts/node_modules/
+dist/
+coverage/
+
+# Sistema
+.DS_Store
+*.log
+
+# Archivos temporales de Supabase CLI (datos de conexión)
+supabase/.temp/

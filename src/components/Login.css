@@ -1,0 +1,469 @@
+/* Login.css */
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #929dca 0%, #05092b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-header {
+  background: #4a6bdf;
+  color: white;
+  padding: 25px;
+  text-align: center;
+}
+
+.login-header-logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  max-width: min(90%, 460px);
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.login-header p {
+  margin: 8px 0 0;
+  opacity: 0.9;
+}
+
+.login-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-section {
+  background: #f8f9fa;
+  padding: 30px;
+  text-align: center;
+  order: 1;
+}
+
+.catalog-icon {
+  font-size: 48px;
+  color: #ed2906;
+  margin-bottom: 15px;
+}
+
+.catalog-section h2 {
+  color: #b0bdca;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+.catalog-section p {
+  color: #7f8c8d;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.catalog-btn {
+  display: inline-block;
+  background: #51991a;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(74, 107, 223, 0.3);
+}
+
+.catalog-btn:hover {
+  background: #3a5bd0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 107, 223, 0.4);
+}
+
+.login-form-section {
+  padding: 30px;
+  order: 2;
+}
+
+.login-form-section h3 {
+  color: #2c3e50;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.login-form-section > p {
+  color: #7f8c8d;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #4a6bdf;
+  outline: none;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-btn:hover {
+  background: #34495e;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #fadbd8;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.success-message {
+  color: #176b35;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #e3f5e8;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.auth-card {
+  max-width: 520px;
+}
+
+.auth-form-section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-back-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: #3155b7;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.auth-back-link:hover {
+  color: #223d87;
+}
+
+.auth-button-link {
+  display: block;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Estilos para la sección de Roles */
+.roles-info {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid #eee;
+}
+
+.roles-info h4 {
+  margin: 0 0 15px;
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.roles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.role-item {
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  border-left: 4px solid #95a5a6;
+  transition: all 0.3s ease;
+}
+
+.role-item:hover {
+  background: #ecf0f1;
+  transform: translateX(4px);
+}
+
+.role-item.role-admin {
+  border-left-color: #e74c3c;
+  background: #fdeae8;
+}
+
+.role-item.role-admin:hover {
+  background: #fadbd8;
+}
+
+.role-item.role-vendedor {
+  border-left-color: #3498db;
+  background: #ebf5fb;
+}
+
+.role-item.role-vendedor:hover {
+  background: #d6eaf8;
+}
+
+.role-item.role-contabilidad {
+  border-left-color: #2ecc71;
+  background: #eafaf1;
+}
+
+.role-item.role-contabilidad:hover {
+  background: #d5f4e6;
+}
+
+.role-item.role-inventario {
+  border-left-color: #f39c12;
+  background: #fef5e7;
+}
+
+.role-item.role-inventario:hover {
+  background: #fdebd0;
+}
+
+.role-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.role-header strong {
+  font-size: 13px;
+  color: #2c3e50;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.role-item p {
+  margin: 0;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .login-card {
+    border-radius: 8px;
+  }
+
+  .login-header {
+    padding: 1.5rem;
+  }
+
+  .login-header-logo {
+    height: 46px;
+  }
+
+  .login-header p {
+    font-size: 0.875rem;
+  }
+
+  .login-form-section,
+  .catalog-section {
+    padding: 1.5rem;
+  }
+
+  .form-group input,
+  .login-btn,
+  .role-item {
+    font-size: 0.875rem;
+  }
+
+  .roles-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 0.75rem 0.25rem;
+    min-height: auto;
+    padding-top: 2rem;
+  }
+
+  .login-card {
+    max-width: 100%;
+    border-radius: 4px;
+  }
+
+  .login-header {
+    padding: 1rem;
+  }
+
+  .login-header-logo {
+    height: 36px;
+    margin-bottom: 0.35rem;
+  }
+
+  .login-header p {
+    font-size: 0.75rem;
+    margin: 0.5rem 0 0;
+  }
+
+  .login-form-section,
+  .catalog-section {
+    padding: 1rem 0.75rem;
+  }
+
+  .login-form-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .login-form-section > p {
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.75rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+  }
+
+  .form-group input {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .login-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .error-message {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+
+  .roles-info {
+    margin-top: 1rem;
+  }
+
+  .roles-info h4 {
+    font-size: 0.875rem;
+    margin: 0.75rem 0 0.5rem;
+  }
+
+  .roles-list {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .role-item {
+    padding: 0.75rem;
+  }
+
+  .role-item h5 {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .role-item p {
+    font-size: 0.65rem;
+    line-height: 1.3;
+  }
+
+  .catalog-section {
+    text-align: center;
+  }
+
+  .catalog-section h3 {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-catalog {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .login-content {
+    flex-direction: row;
+  }
+  
+  .catalog-section {
+    flex: 1.5;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .login-form-section {
+    flex: 1;
+    order: 1;
+    border-right: 1px solid #eee;
+  }
+
+  .roles-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
