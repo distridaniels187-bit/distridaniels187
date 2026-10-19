@@ -86,6 +86,42 @@ export const subirImagenProducto = async (file) => {
   };
 };
 
+// Ruta dentro del bucket a partir de la URL pública (sin el ?v= de la migración).
+// Devuelve null si la imagen no está en nuestro bucket (por ejemplo, Cloudinary).
+export const rutaEnBucket = (imagenUrl) => {
+  const marca = `/storage/v1/object/public/${BUCKET_PRODUCTOS}/`;
+  const url = (imagenUrl || '').trim();
+  const posicion = url.indexOf(marca);
+  if (posicion === -1) return null;
+  return decodeURIComponent(url.slice(posicion + marca.length).split('?')[0]);
+};
+
+// Borra del Storage la imagen de un producto, solo si es de nuestro bucket
+// y ningún otro producto usa el mismo archivo. Nunca lanza error: si falla,
+// el archivo queda huérfano pero el producto ya se borró o actualizó.
+export const eliminarImagenProducto = async (imagenUrl, idProductoExcluido = null) => {
+  const ruta = rutaEnBucket(imagenUrl);
+  if (!ruta) return { eliminada: false, motivo: 'no-esta-en-supabase' };
+
+  try {
+    let consulta = supabase
+      .from('productos')
+      .select('id', { count: 'exact', head: true })
+      .like('imagen_url', `%/${BUCKET_PRODUCTOS}/${ruta}%`);
+    if (idProductoExcluido !== null) consulta = consulta.neq('id', idProductoExcluido);
+    const { count, error: errorConteo } = await consulta;
+    if (errorConteo) throw errorConteo;
+    if (count > 0) return { eliminada: false, motivo: 'la-usa-otro-producto' };
+
+    const { error } = await supabase.storage.from(BUCKET_PRODUCTOS).remove([ruta]);
+    if (error) throw error;
+    return { eliminada: true };
+  } catch (error) {
+    console.warn('No se pudo borrar la imagen del Storage:', ruta, error);
+    return { eliminada: false, motivo: 'error' };
+  }
+};
+
 export const formatearTamano = (bytes) => (
   bytes >= 1024 * 1024
     ? `${(bytes / (1024 * 1024)).toFixed(1)} MB`

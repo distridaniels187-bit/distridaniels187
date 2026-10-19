@@ -729,6 +729,169 @@ const FacturaDetalle = () => {
     };
   };
 
+  // Impresión en formato ticket para impresora térmica (ancho en EMPRESA.anchoTicketMm)
+  const imprimirTicket = () => {
+    const ventanaImpresion = window.open('', '_blank', 'width=420,height=900');
+    if (!ventanaImpresion) {
+      alert('El navegador bloqueó la ventana de impresión. Permite las ventanas emergentes para este sitio.');
+      return;
+    }
+
+    const html = (texto) => String(texto ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+    const anchoPapel = EMPRESA.anchoTicketMm || 78;
+    const numero = factura.id.toString().padStart(6, '0');
+    const fechaFactura = parseDateAsLocal(factura.fecha) || new Date(factura.fecha);
+    const creada = factura.created_at ? new Date(factura.created_at) : null;
+    const fechaTexto = fechaFactura.toLocaleDateString('es-CO');
+    const horaTexto = creada
+      ? creada.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })
+      : '';
+    const totalAbonado = calcularTotalAbonado();
+    const saldo = calcularSaldoPendiente();
+    const notaCliente = getNotaClienteFactura(factura);
+    const logoUrl = `${window.location.origin}${EMPRESA.logo}`;
+
+    const contenido = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Cuenta de Cobro #${numero}</title>
+          <!-- El alto real se calcula al cargar (un tamaño "auto" no es válido en @page) -->
+          <style id="pagina">@page { size: ${anchoPapel}mm 297mm; margin: 0; }</style>
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              font-family: Arial, Helvetica, sans-serif;
+              margin: 0;
+              padding: 3mm 4mm;
+              width: ${anchoPapel}mm;
+              font-size: 11px;
+              line-height: 1.25;
+              color: #000;
+            }
+            .centrado { text-align: center; }
+            .logo { text-align: center; margin-bottom: 4px; }
+            .logo img { max-width: 34mm; max-height: 30mm; object-fit: contain; }
+            .empresa { font-size: 15px; font-weight: 900; text-transform: uppercase; text-align: center; }
+            .meta { font-size: 11px; text-align: center; }
+            .doc-title { font-size: 14px; font-weight: 900; margin: 8px 0 2px; text-transform: uppercase; text-align: center; }
+            .separador { border-top: 1px dashed #000; margin: 6px 0; }
+            .fila { display: flex; justify-content: space-between; gap: 8px; }
+            .fila .etq { font-weight: 700; white-space: nowrap; }
+            .fila .val { text-align: right; word-break: break-word; }
+            table { width: 100%; border-collapse: collapse; }
+            th { font-size: 11px; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid #000; padding: 2px 0; }
+            td { font-size: 11px; padding: 3px 0; vertical-align: top; }
+            .col-art { text-align: left; }
+            .col-und { text-align: right; width: 14%; }
+            .col-valor { text-align: right; width: 30%; white-space: nowrap; }
+            .producto { font-weight: 700; text-transform: uppercase; }
+            .detalle { font-size: 10px; }
+            .total { font-size: 15px; font-weight: 900; border-top: 1px dashed #000; padding-top: 4px; margin-top: 3px; }
+            .saldo { font-size: 13px; font-weight: 900; }
+            .titulo { font-weight: 900; text-transform: uppercase; margin-bottom: 2px; }
+            .letras { font-size: 10px; text-transform: uppercase; margin-top: 4px; }
+            .firma { margin-top: 26px; border-top: 1px solid #000; text-align: center; font-size: 10px; padding-top: 2px; }
+            .nota { font-size: 10px; text-align: center; text-transform: uppercase; margin-top: 3px; }
+            @media print { body { width: ${anchoPapel}mm; } }
+          </style>
+        </head>
+        <body>
+          <div class="logo"><img src="${logoUrl}" alt="" onerror="this.style.display='none'" /></div>
+          <div class="empresa">${html(EMPRESA.nombreLegal)}</div>
+          <div class="meta">NIT: ${html(EMPRESA.nit)}</div>
+          ${EMPRESA.contactos.map(c => `<div class="meta">${html(c)}</div>`).join('')}
+
+          <div class="doc-title">Cuenta de cobro</div>
+          <div class="meta">No: CC-${numero}</div>
+          <div class="meta">FECHA: ${fechaTexto}${horaTexto ? ` ${horaTexto}` : ''}</div>
+
+          <div class="separador"></div>
+
+          <div class="titulo">Cliente</div>
+          <div class="fila"><span class="etq">Nom:</span><span class="val">${html((factura.cliente || 'CONSUMIDOR FINAL').toUpperCase())}</span></div>
+          ${factura.direccion ? `<div class="fila"><span class="etq">Dir:</span><span class="val">${html(factura.direccion.toUpperCase())}</span></div>` : ''}
+          ${factura.telefono ? `<div class="fila"><span class="etq">Tel:</span><span class="val">${html(factura.telefono)}</span></div>` : ''}
+          <div class="fila"><span class="etq">Vend:</span><span class="val">${html((factura.vendedor || '').toUpperCase())}</span></div>
+
+          <div class="separador"></div>
+
+          <table>
+            <thead>
+              <tr>
+                <th class="col-art">Artículo</th>
+                <th class="col-und">Und.</th>
+                <th class="col-valor">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${factura.productos.map(producto => `
+                <tr>
+                  <td class="col-art">
+                    <div class="producto">${html(producto.nombre)}</div>
+                    <div class="detalle">${formatearMonedaImpresion(producto.precio)} x ${producto.cantidad}</div>
+                    ${producto.lote ? `<div class="detalle">Lote: ${html(producto.lote)}</div>` : ''}
+                    ${producto.fecha_vencimiento ? `<div class="detalle">Vence: ${html(formatearFechaSimple(producto.fecha_vencimiento))}</div>` : ''}
+                  </td>
+                  <td class="col-und">${producto.cantidad}</td>
+                  <td class="col-valor">${formatearMonedaImpresion(producto.cantidad * producto.precio)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="separador"></div>
+
+          <div class="fila"><span>PRODUCTOS:</span><span>${factura.productos.length}</span></div>
+          <div class="fila total"><span>TOTAL</span><span>${formatearMonedaImpresion(factura.total)}</span></div>
+          <div class="letras">Son: ${html(convertirNumeroALetras(Math.round(factura.total)))}</div>
+
+          ${totalAbonado > 0 ? `
+            <div class="separador"></div>
+            <div class="titulo">Abonos</div>
+            ${abonos.map(a => `<div class="fila"><span>${html(formatearFechaSimple(a.fecha))}</span><span>${formatearMonedaImpresion(a.monto)}</span></div>`).join('')}
+            <div class="fila"><span class="etq">TOTAL ABONADO:</span><span>${formatearMonedaImpresion(totalAbonado)}</span></div>
+          ` : ''}
+          <div class="fila saldo"><span>SALDO:</span><span>${formatearMonedaImpresion(saldo)}</span></div>
+          <div class="fila"><span class="etq">ESTADO:</span><span>${estaPagada() ? 'PAGADA' : 'PENDIENTE'}</span></div>
+
+          ${notaCliente ? `<div class="separador"></div><div class="titulo">Notas</div><div>${html(notaCliente)}</div>` : ''}
+
+          ${EMPRESA.mediosPago.length ? `
+            <div class="separador"></div>
+            <div class="titulo">Medios de pago</div>
+            ${EMPRESA.mediosPago.map(m => `<div class="fila"><span>${html(m.nombre)}:</span><span>${html(m.numero)}</span></div>`).join('')}
+          ` : ''}
+
+          <div class="firma">Firma del cliente</div>
+
+          <div class="separador"></div>
+          <div class="nota">Gracias por su compra</div>
+          <div class="nota">*** Este documento no es factura electrónica ***</div>
+          <div class="nota">Software: ${html(DESARROLLADOR.marca)}</div>
+        </body>
+      </html>
+    `;
+
+    ventanaImpresion.document.write(contenido);
+    ventanaImpresion.document.close();
+    ventanaImpresion.onload = () => {
+      setTimeout(() => {
+        // Página del alto exacto del ticket para que la impresora térmica corte al final
+        const doc = ventanaImpresion.document;
+        const altoMm = Math.ceil(doc.body.scrollHeight * 25.4 / 96) + 6;
+        doc.getElementById('pagina').textContent = `@page { size: ${anchoPapel}mm ${altoMm}mm; margin: 0; }`;
+        ventanaImpresion.print();
+      }, 500);
+    };
+  };
+
   const calcularTotalAbonado = () => {
     return abonos.reduce((total, abono) => total + abono.monto, 0);
   };
@@ -1038,12 +1201,19 @@ const FacturaDetalle = () => {
           >
             {copiado ? '✓ Copiado' : '⎘ Copiar'}
           </button>
-          <button 
+          <button
+            className="button icon-button"
+            onClick={imprimirTicket}
+            title="Imprimir en impresora de tickets"
+          >
+            🧾 Imprimir ticket
+          </button>
+          <button
             className="button icon-button"
             onClick={imprimirFactura}
-            title="Imprimir"
+            title="Imprimir en hoja carta"
           >
-            ⎙ Imprimir
+            ⎙ Hoja carta
           </button>
         </div>
       </div>

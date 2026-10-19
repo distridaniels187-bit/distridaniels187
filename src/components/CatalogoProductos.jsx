@@ -7,7 +7,7 @@ import './CatalogoProductos.css';
 import { useAuth } from '../context/auth-context';
 import { getProductSalesAndRecommendations, mergeRecommendationsIntoProducts } from '../lib/inventoryUtils';
 import { normalizarProductoData } from '../lib/productosUtils';
-import { subirImagenProducto, formatearTamano, TAMANO_MAXIMO_ORIGINAL } from '../lib/imagenesProductos';
+import { subirImagenProducto, eliminarImagenProducto, formatearTamano, TAMANO_MAXIMO_ORIGINAL } from '../lib/imagenesProductos';
 
 const LIMITE_ALERTA_STOCK_BAJO = 25;
 const LIMITE_STOCK_BAJO_REPORTE = 9;
@@ -647,6 +647,11 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
           p.id === editandoId ? productoActualizado : p
         ));
 
+        // Si se cambió o quitó la foto, borrar la anterior del Storage
+        if (productoPrevio?.imagen_url && productoPrevio.imagen_url !== productoActualizado?.imagen_url) {
+          await eliminarImagenProducto(productoPrevio.imagen_url, editandoId);
+        }
+
         // Registrar ajuste de stock si hubo cambio
         if (stockAnterior !== null && stockAnterior !== stockNuevoValor) {
           const cambios = {
@@ -750,6 +755,7 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
   };
 
   const eliminarProducto = async (id) => {
+    const imagenAnterior = productos.find(p => p.id === id)?.imagen_url;
     try {
       const { error } = await supabase
         .from('productos')
@@ -759,6 +765,8 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
       if (error) throw error;
 
       setProductos(productos.filter(p => p.id !== id));
+      // La imagen se borra después del producto: si falla, el producto ya no existe y solo queda el archivo
+      await eliminarImagenProducto(imagenAnterior, id);
       alert('Producto eliminado con éxito');
     } catch (error) {
       console.error('Error eliminando producto:', error);

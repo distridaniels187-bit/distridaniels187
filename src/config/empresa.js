@@ -11,6 +11,8 @@ export const EMPRESA = {
     'Ciudad Cel. 300 000 0000'
   ],
   logo: '/logo-empresa.png',
+  // Ancho del papel de la impresora térmica de tickets (mm): 78 u 80, o 58 para las pequeñas
+  anchoTicketMm: 78,
   // Medios de pago que se imprimen en el pie de la factura
   mediosPago: [
     { nombre: 'NEQUI Y DAVIPLATA', numero: '0000000000' },
@@ -21,6 +23,7 @@ export const EMPRESA = {
 // Vendedores: nombre y número de WhatsApp (con indicativo 57, sin espacios).
 export const VENDEDORES = [
   { nombre: 'Anderson Perez', whatsapp: '573223092094' },
+  { nombre: 'Luisa Fernanda Martínez', whatsapp: '573105692662' },
   // TODO: quitar antes de entregar al cliente
   { nombre: 'Pruebas - Edwin', whatsapp: '573004583117' }
 ];

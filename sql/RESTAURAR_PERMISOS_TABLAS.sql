@@ -19,6 +19,16 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
   GRANT EXECUTE ON FUNCTIONS TO authenticated;
 
+-- Rol de servicio (scripts de administración como la migración de imágenes y los respaldos).
+-- Su clave nunca va en la aplicación ni en Vercel.
+GRANT USAGE ON SCHEMA public TO service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO service_role;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO service_role;
+
 -- Catálogo público (sin iniciar sesión): solo puede ver productos.
 -- Los pedidos del catálogo se guardan con la función crear_pedido_catalogo.
 GRANT SELECT ON public.productos TO anon;
