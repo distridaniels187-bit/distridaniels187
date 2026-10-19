@@ -707,6 +707,13 @@ button {
   background-color: var(--primary-dark);
 }
 
+.upload-resultado {
+  display: block;
+  margin-top: 0.5rem;
+  color: #047857;
+  font-size: 0.85rem;
+}
+
 .image-preview {
   margin-top: 1rem;
   display: flex;

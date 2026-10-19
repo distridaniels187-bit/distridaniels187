@@ -30,6 +30,11 @@ body {
   min-height: 100vh;
 }
 
+/* body es flex: sin esto la aplicación se encoge al ancho de su contenido en pantallas grandes */
+#root {
+  width: 100%;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;

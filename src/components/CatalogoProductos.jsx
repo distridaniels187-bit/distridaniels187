@@ -7,59 +7,43 @@ import './CatalogoProductos.css';
 import { useAuth } from '../context/auth-context';
 import { getProductSalesAndRecommendations, mergeRecommendationsIntoProducts } from '../lib/inventoryUtils';
 import { normalizarProductoData } from '../lib/productosUtils';
+import { subirImagenProducto, formatearTamano, TAMANO_MAXIMO_ORIGINAL } from '../lib/imagenesProductos';
 
 const LIMITE_ALERTA_STOCK_BAJO = 25;
 const LIMITE_STOCK_BAJO_REPORTE = 9;
 
-// Componente para subir imágenes a Cloudinary
-const CloudinaryUpload = ({ onImageUpload }) => {
+// Componente para subir imágenes a Supabase Storage (convertidas a WebP)
+const SubirImagenProducto = ({ onImageUpload }) => {
   const [uploading, setUploading] = useState(false);
-  const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const [resultado, setResultado] = useState('');
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+    e.target.value = ''; // permite volver a elegir el mismo archivo
     if (!file) return;
 
     if (!file.type.match('image.*')) {
-      alert('Por favor, selecciona un archivo de imagen (JPEG, PNG, etc.)');
+      alert('Por favor, selecciona un archivo de imagen (JPEG, PNG, WebP, etc.)');
       return;
     }
     
-    if (file.size > 5 * 1024 * 1024) {
-      alert('La imagen es demasiado grande (máximo 5MB)');
+    if (file.size > TAMANO_MAXIMO_ORIGINAL) {
+      alert('La imagen es demasiado grande (máximo 15MB)');
       return;
     }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
-      alert('Faltan variables de Cloudinary (VITE_CLOUDINARY_CLOUD_NAME y VITE_CLOUDINARY_UPLOAD_PRESET).');
-      return;
-    }
-
-    formData.append('upload_preset', cloudinaryUploadPreset);
-    formData.append('folder', 'productos');
 
     try {
       setUploading(true);
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
+      setResultado('');
+      const subida = await subirImagenProducto(file);
+      setResultado(`Optimizada: ${formatearTamano(subida.tamanoOriginal)} → ${formatearTamano(subida.tamanoFinal)}`);
       onImageUpload({
-        imagenUrl: data.secure_url,
-        imagenPublicId: data.public_id
+        imagenUrl: subida.imagenUrl,
+        imagenPublicId: subida.imagenPublicId
       });
     } catch (error) {
       console.error('Error subiendo imagen:', error);
-      alert('Error al subir la imagen. Intenta de nuevo.');
+      alert(`Error al subir la imagen: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -68,7 +52,7 @@ const CloudinaryUpload = ({ onImageUpload }) => {
   return (
     <div className="cloudinary-upload">
       <label className="upload-button">
-        {uploading ? 'Subiendo...' : '📤 Subir Imagen'}
+        {uploading ? 'Optimizando y subiendo...' : '📤 Subir Imagen'}
         <input
           type="file"
           accept="image/*"
@@ -77,6 +61,7 @@ const CloudinaryUpload = ({ onImageUpload }) => {
           style={{ display: 'none' }}
         />
       </label>
+      {resultado && <small className="upload-resultado">{resultado}</small>}
     </div>
   );
 };
@@ -1176,7 +1161,7 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
 
                 <div className="form-group">
                   <label>Imagen:</label>
-                  <CloudinaryUpload 
+                  <SubirImagenProducto 
                     onImageUpload={({imagenUrl, imagenPublicId}) => {
                       setNuevoProducto({
                         ...nuevoProducto,

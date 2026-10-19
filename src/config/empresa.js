@@ -10,7 +10,7 @@ export const EMPRESA = {
   contactos: [
     'Ciudad Cel. 300 000 0000'
   ],
-  logo: '/logo-empresa.svg',
+  logo: '/logo-empresa.png',
   // Medios de pago que se imprimen en el pie de la factura
   mediosPago: [
     { nombre: 'NEQUI Y DAVIPLATA', numero: '0000000000' },

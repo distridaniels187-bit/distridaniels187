@@ -2246,8 +2246,8 @@ body.catalogo-app {
   transform-origin: top right;
 }
 
-/* ===== Productos dentro del pedido (móvil) ===== */
-@media (max-width: 767px) {
+/* ===== Productos dentro del pedido (todos los tamaños: el panel lateral mide 400px) ===== */
+@media all {
   .catalogo-mobile .continue-shopping-top {
     padding: 0 16px 10px;
     border: none;
@@ -2416,4 +2416,97 @@ body.catalogo-app {
 .catalogo-mobile .form-error {
   justify-content: flex-start;
   text-align: left;
+}
+
+/* ===== Escritorio: barra superior en una sola fila ===== */
+@media (min-width: 900px) {
+  .catalogo-mobile .app-header {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(320px, 640px) minmax(220px, 1fr);
+    grid-template-areas:
+      "marca buscador acciones"
+      "chips chips chips";
+    align-items: center;
+    column-gap: 24px;
+    padding: 0 max(24px, calc((100% - 1200px) / 2));
+  }
+
+  /* header-content y sticky-filters se "abren" para que sus hijos entren a la grilla */
+  .catalogo-mobile .header-content,
+  .catalogo-mobile .sticky-filters {
+    display: contents;
+  }
+
+  .catalogo-mobile .app-brand {
+    grid-area: marca;
+    padding: 14px 0;
+  }
+
+  .catalogo-mobile .cat-header-actions {
+    grid-area: acciones;
+    justify-self: end;
+  }
+
+  .catalogo-mobile .search-row {
+    grid-area: buscador;
+  }
+
+  .catalogo-mobile .category-chips {
+    grid-area: chips;
+    margin: 0 0 12px;
+    padding: 0;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .catalogo-mobile .filters-row {
+    grid-column: 1 / -1;
+    margin: 0 0 12px;
+    max-width: 480px;
+    justify-self: center;
+    width: 100%;
+  }
+
+  .app-brand-logo {
+    height: 42px;
+  }
+
+  .catalogo-mobile .app-brand-text h1 {
+    font-size: 1.25rem;
+  }
+
+  .results-count {
+    padding: 16px max(24px, calc((100% - 1200px) / 2)) 0;
+    max-width: none;
+  }
+
+  .catalogo-mobile .product-card {
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .catalogo-mobile .product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .catalogo-mobile .cart-content {
+    max-width: 440px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .catalogo-mobile .product-grid-two-columns {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Logo redondo: un poco más grande para que se lea el texto */
+.catalogo-mobile .app-brand-logo {
+  height: 46px;
+}
+
+@media (min-width: 900px) {
+  .catalogo-mobile .app-brand-logo {
+    height: 54px;
+  }
 }
