@@ -442,6 +442,36 @@ const InvoiceScreen = () => {
         }
 
         let stockFinal = Number(productoVerificado.stock);
+        if (!resultadoMovimiento.success) {
+          const { data: productoAjustado, error: ajusteError } = await supabase
+            .from('productos')
+            .update({
+              stock: nuevoStock,
+              activo: nuevoStock > 0 ? productoActual.activo : false
+            })
+            .eq('id', productoId)
+            .select('stock')
+            .maybeSingle();
+
+          if (ajusteError || !productoAjustado) {
+            console.error(`No se pudo ajustar el stock de ${producto.nombre}:`, ajusteError);
+            errores.push(
+              `${producto.nombre}: el inventario quedó en ${stockFinal} (antes ${stockActual}; debía quedar ${nuevoStock}), ` +
+              'pero no se pudo corregir el stock tras el error del historial'
+            );
+          } else {
+            stockFinal = Number(productoAjustado.stock);
+            const detalleError = resultadoMovimiento.error?.message
+              ? `: ${resultadoMovimiento.error.message}`
+              : '';
+            errores.push(
+              `${producto.nombre}: el inventario quedó en ${stockFinal} (antes ${stockActual}; debía quedar ${nuevoStock}), ` +
+              `pero no se guardó el movimiento en el historial${detalleError}`
+            );
+          }
+          continue;
+        }
+
         if (stockFinal !== nuevoStock) {
           console.warn(`Corrigiendo stock después de la factura ${facturaId}`, {
             producto: producto.nombre,
@@ -478,16 +508,6 @@ const InvoiceScreen = () => {
             );
             continue;
           }
-        }
-
-        if (!resultadoMovimiento.success) {
-          const detalleError = resultadoMovimiento.error?.message
-            ? `: ${resultadoMovimiento.error.message}`
-            : '';
-          errores.push(
-            `${producto.nombre}: el inventario quedó en ${stockFinal} (antes ${stockActual}; debía quedar ${nuevoStock}), ` +
-            `pero no se guardó el movimiento en el historial${detalleError}`
-          );
         }
 
         if (nuevoStock === 0 && productoActual.activo) {

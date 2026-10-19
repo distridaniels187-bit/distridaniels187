@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { VENDEDORES } from '../../config/empresa';
 import InvoiceScreen from '../InvoiceScreen';
 
 const mockNavigate = jest.fn();
@@ -166,7 +167,7 @@ describe('InvoiceScreen - flujo de factura con producto inválido', () => {
     fireEvent.click(screen.getByRole('button', { name: /agregar/i }));
 
     fireEvent.change(screen.getByRole('combobox'), {
-      target: { value: 'Alan Diaz' },
+      target: { value: VENDEDORES[0].nombre },
     });
 
     fireEvent.click(
@@ -209,7 +210,7 @@ describe('InvoiceScreen - flujo de factura con producto inválido', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /agregar/i }));
     fireEvent.change(screen.getByRole('combobox'), {
-      target: { value: 'Alan Diaz' },
+      target: { value: VENDEDORES[0].nombre },
     });
     fireEvent.click(screen.getByRole('button', { name: /vista previa y guardar/i }));
 

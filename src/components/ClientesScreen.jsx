@@ -11,6 +11,7 @@ const ClientesScreen = ({
   clientes: initialClientes 
 }) => {
   const navigate = useNavigate();
+
   // Estados para clientes
   const [busquedaCliente, setBusquedaCliente] = useState('');
   const [nuevoCliente, setNuevoCliente] = useState({
@@ -24,14 +25,20 @@ const ClientesScreen = ({
   const [importandoClientes, setImportandoClientes] = useState(false);
   const [filtroClasificacion, setFiltroClasificacion] = useState(0);
   const [clienteEditando, setClienteEditando] = useState(null);
-  const [cargandoClientes, setCargandoClientes] = useState(true);
+  const [cargandoClientes, setCargandoClientes] = useState(!initialClientes || initialClientes.length === 0);
   const [error, setError] = useState(null);
   const [mostrarEstadisticas, setMostrarEstadisticas] = useState(false);
 
   // Cargar clientes al montar el componente
   useEffect(() => {
+    if (initialClientes && initialClientes.length > 0) {
+      setClientes(initialClientes);
+      setCargandoClientes(false);
+      return;
+    }
+
     cargarClientes();
-  }, []);
+  }, [initialClientes]);
 
   // Función para determinar clasificación automática
   const determinarClasificacionAutomatica = async (nombreCliente) => {

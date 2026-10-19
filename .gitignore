@@ -25,3 +25,9 @@ coverage/
 
 # Archivos temporales de Supabase CLI (datos de conexión)
 supabase/.temp/
+
+# Archivos temporales de Word / Office
+~$*
+
+# Vercel
+.vercel/

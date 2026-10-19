@@ -1,7 +1,11 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render as renderWithTestingLibrary, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { MemoryRouter } from 'react-router-dom'
 import ClientesScreen from '../ClientesScreen'
+
+const TestRouter = ({ children }) => <MemoryRouter>{children}</MemoryRouter>
+const render = (ui, options) => renderWithTestingLibrary(ui, { wrapper: TestRouter, ...options })
 
 // Mock de Supabase
 jest.mock('../supabaseClient.js', () => ({
