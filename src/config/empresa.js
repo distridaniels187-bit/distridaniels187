@@ -5,10 +5,10 @@
 export const EMPRESA = {
   nombreCorto: 'DistriDaniels',
   nombreLegal: 'DISTRIDANIELS', // Nombre que sale en la factura / cuenta de cobro
-  nit: '000000000-0',
+  nit: '1023914575',
   // Líneas de contacto que se imprimen debajo del NIT en la factura
   contactos: [
-    'Ciudad Cel. 300 000 0000'
+    'Cel. 322 309 2094'
   ],
   logo: '/logo-empresa.png',
   // Ancho del papel de la impresora térmica de tickets (mm): 78 u 80, o 58 para las pequeñas

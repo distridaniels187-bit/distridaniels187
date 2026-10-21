@@ -905,20 +905,6 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
           id="catalogo-acciones"
           className={`header-actions ${mostrarAccionesMobile ? 'mobile-open' : ''}`}
         >
-          {!isReadOnly && (
-            <ImportExportActions 
-              productos={productos}
-              productosFiltrados={productosFiltrados}
-              setProductos={setProductos}
-            />
-          )}
-          <button 
-            className="button warning-button"
-            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
-            title={`${notificacionesStock.length} productos con stock bajo`}
-          >
-            <i className="fas fa-exclamation-triangle"></i> Stock Bajo ({notificacionesStock.length})
-          </button>
           {!isReadOnly && user?.role !== 'inventario' && (
             <button 
               className="button success-button"
@@ -950,6 +936,20 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
           >
             <i className="fas fa-arrow-left"></i> Volver
           </button>
+          <button
+            className="button warning-button"
+            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+            title={`${notificacionesStock.length} productos con stock bajo`}
+          >
+            <i className="fas fa-exclamation-triangle"></i> Stock Bajo ({notificacionesStock.length})
+          </button>
+          {!isReadOnly && (
+            <ImportExportActions
+              productos={productos}
+              productosFiltrados={productosFiltrados}
+              setProductos={setProductos}
+            />
+          )}
         </div>
       </header>
 
@@ -1050,7 +1050,7 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
           </div>
 
           {mostrarFormulario && (
-            <div className="modal-overlay">
+            <div className="modal-overlay producto-form-overlay">
               <div className="producto-form">
                 <h2>{editandoId ? '✏️ Editar Producto' : '➕ Nuevo Producto'}</h2>
                 

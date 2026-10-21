@@ -1524,3 +1524,34 @@ button {
   font-size: 1.3rem;
   color: #4ad66d;
 }
+/* Formulario de producto en móvil: los botones no deben quedar tapados por la barra inferior del navegador */
+@media (max-width: 768px) {
+  .producto-form-overlay {
+    height: 100vh;
+    height: 100dvh;
+    align-items: flex-start;
+    padding: 0.5rem 0;
+  }
+
+  .producto-form-overlay .producto-form {
+    width: 95%;
+    margin: 0 auto;
+    padding-bottom: 0;
+    max-height: calc(100vh - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+
+  .producto-form-overlay .form-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--white);
+    margin: 1rem -1rem 0;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .producto-form-overlay .form-actions .button {
+    flex: 1;
+  }
+}
