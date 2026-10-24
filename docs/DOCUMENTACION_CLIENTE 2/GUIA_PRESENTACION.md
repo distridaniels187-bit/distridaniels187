@@ -39,7 +39,7 @@ zip -r DOCUMENTACION_EBS_Cliente.zip DOCUMENTACION_CLIENTE/
 - **Adjunto:** DOCUMENTACION_EBS_Cliente.zip
 - **Mensaje:**
   ```
-  Estimado/a [Nombre del Cliente]:
+  Estimado/a Anderson Dario Perez:
 
   Adjunto encontrará la documentación completa de nuestra propuesta para 
   implementar el Sistema de Gestión Comercial e-business store(EBS).
