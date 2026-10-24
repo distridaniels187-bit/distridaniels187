@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CLAVES_ADMIN, DESARROLLADOR } from '../config/empresa';
+import { DESARROLLADOR } from '../config/empresa';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import * as XLSX from 'xlsx';
@@ -455,16 +455,32 @@ const ReporteInventario = ({ productos }) => {
   );
 };
 
-// Modal para validar contraseña al eliminar
-const ModalConfirmacion = ({ isOpen, onClose, onConfirm, productoNombre }) => {
-  const [password, setPassword] = useState('');
+// Roles que pueden eliminar productos y gestionar sus imágenes (igual que en sql/SEGURIDAD_ROLES_E_IMAGENES.sql)
+const ROLES_ADMIN_PRODUCTOS = ['superadmin', 'admin'];
 
-  const handleConfirm = () => {
-    if (CLAVES_ADMIN.includes(password)) {
+// Modal para validar contraseña al eliminar: se confirma con la contraseña de inicio de sesión del usuario
+const ModalConfirmacion = ({ isOpen, onClose, onConfirm, productoNombre, email }) => {
+  const [password, setPassword] = useState('');
+  const [verificando, setVerificando] = useState(false);
+
+  const cerrar = () => {
+    setPassword('');
+    onClose();
+  };
+
+  const handleConfirm = async () => {
+    if (!password || verificando) return;
+    setVerificando(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        alert(`Contraseña incorrecta. Usa la misma contraseña con la que iniciaste sesión o comunícate con soporte ${DESARROLLADOR.telefono}`);
+        return;
+      }
       onConfirm();
-      onClose();
-    } else {
-      alert(`Contraseña incorrecta comunicate con soporte ${DESARROLLADOR.telefono}`);
+      cerrar();
+    } finally {
+      setVerificando(false);
     }
   };
 
@@ -475,20 +491,22 @@ const ModalConfirmacion = ({ isOpen, onClose, onConfirm, productoNombre }) => {
       <div className="modal-confirmacion">
         <h3>Confirmar Eliminación</h3>
         <p>Está a punto de eliminar el producto: <strong>{productoNombre}</strong></p>
-        <p>Ingrese la contraseña para confirmar:</p>
+        <p>Ingrese su contraseña de inicio de sesión para confirmar:</p>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleConfirm()}
           placeholder="Contraseña"
           className="password-input"
+          autoComplete="current-password"
         />
         <div className="modal-actions">
-          <button className="button secondary-button" onClick={onClose}>
+          <button className="button secondary-button" onClick={cerrar}>
             Cancelar
           </button>
-          <button className="button danger-button" onClick={handleConfirm}>
-            Confirmar Eliminación
+          <button className="button danger-button" onClick={handleConfirm} disabled={verificando}>
+            {verificando ? 'Verificando...' : 'Confirmar Eliminación'}
           </button>
         </div>
       </div>
@@ -500,7 +518,8 @@ const ModalConfirmacion = ({ isOpen, onClose, onConfirm, productoNombre }) => {
 const CatalogoProductos = ({ mode = 'admin' }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isReadOnly = mode === 'contabilidad';
+  const isReadOnly = mode === 'contabilidad' || mode === 'cliente';
+  const esAdminProductos = ROLES_ADMIN_PRODUCTOS.includes(user?.role);
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [nuevoProducto, setNuevoProducto] = useState({
@@ -1169,28 +1188,35 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
 
                 <div className="form-group">
                   <label>Imagen:</label>
-                  <SubirImagenProducto 
-                    onImageUpload={({imagenUrl, imagenPublicId}) => {
-                      setNuevoProducto({
-                        ...nuevoProducto,
-                        imagenUrl,
-                        imagenPublicId
-                      });
-                    }}
-                  />
+                  {/* Solo superadmin/admin pueden subir o cambiar imágenes (la base de datos también lo exige) */}
+                  {esAdminProductos ? (
+                    <SubirImagenProducto
+                      onImageUpload={({imagenUrl, imagenPublicId}) => {
+                        setNuevoProducto({
+                          ...nuevoProducto,
+                          imagenUrl,
+                          imagenPublicId
+                        });
+                      }}
+                    />
+                  ) : (
+                    <small>Solo un administrador puede cambiar la imagen del producto.</small>
+                  )}
                   {nuevoProducto.imagenUrl && (
                     <div className="image-preview">
                       <img src={nuevoProducto.imagenUrl} alt="Vista previa" />
-                      <button 
-                        className="button small-button danger-button"
-                        onClick={() => setNuevoProducto({
-                          ...nuevoProducto,
-                          imagenUrl: '',
-                          imagenPublicId: ''
-                        })}
-                      >
-                        Eliminar
-                      </button>
+                      {esAdminProductos && (
+                        <button
+                          className="button small-button danger-button"
+                          onClick={() => setNuevoProducto({
+                            ...nuevoProducto,
+                            imagenUrl: '',
+                            imagenPublicId: ''
+                          })}
+                        >
+                          Eliminar
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1319,8 +1345,8 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
                         <i className="fas fa-edit"></i> Editar
                       </button>
                       
-                      {/* Botón de eliminar solo visible para productos inactivos */}
-                      {!producto.activo && (
+                      {/* Botón de eliminar solo para administradores y productos inactivos */}
+                      {!producto.activo && esAdminProductos && (
                         <button 
                           className="action-button delete-button"
                           onClick={() => abrirModalEliminar(producto.id, producto.nombre)}
@@ -1342,6 +1368,7 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
         onClose={cerrarModalEliminar}
         onConfirm={confirmarEliminacion}
         productoNombre={modalEliminar.productoNombre}
+        email={user?.email}
       />
     </div>
   );
