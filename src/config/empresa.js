@@ -15,8 +15,8 @@ export const EMPRESA = {
   anchoTicketMm: 78,
   // Medios de pago que se imprimen en el pie de la factura
   mediosPago: [
-    { nombre: 'NEQUI Y DAVIPLATA', numero: '0000000000' },
-    { nombre: 'BANCOLOMBIA AHORROS', numero: '00000000000' }
+    { nombre: 'BANCOLOMBIA AHORROS', numero: '42872312107' },
+    { nombre: 'LLAVE', numero: '0091711762' }
   ]
 };
 

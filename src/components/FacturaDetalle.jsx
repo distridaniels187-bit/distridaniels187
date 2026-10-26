@@ -863,13 +863,13 @@ const FacturaDetalle = () => {
 
           ${notaCliente ? `<div class="separador"></div><div class="titulo">Notas</div><div>${html(notaCliente)}</div>` : ''}
 
+          <div class="firma">Firma del cliente</div>
+
           ${EMPRESA.mediosPago.length ? `
             <div class="separador"></div>
             <div class="titulo">Medios de pago</div>
             ${EMPRESA.mediosPago.map(m => `<div class="fila"><span>${html(m.nombre)}:</span><span>${html(m.numero)}</span></div>`).join('')}
           ` : ''}
-
-          <div class="firma">Firma del cliente</div>
 
           <div class="separador"></div>
           <div class="nota">Gracias por su compra</div>
