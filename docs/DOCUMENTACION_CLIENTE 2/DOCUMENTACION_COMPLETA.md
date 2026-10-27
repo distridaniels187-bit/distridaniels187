@@ -104,12 +104,12 @@ DOCUMENTACION_CLIENTE/
 - **90% menos errores** en facturación
 - **40% reducción en morosidad**
 - **100% respaldos automáticos**
-- **ROI en 1.85 meses**
+- **Se paga sola en menos de 1 mes**
 
 ### Inversión Clara
-- **Implementación:** $10,000,000 COP
-- **Mensualidad:** $400,000 COP
-- **Punto de equilibrio:** 1.85 meses
+- **Licencia anual:** $2.000.000 COP - 15% de descuento = $1.700.000 COP (implementación, hosting, backups y soporte incluidos)
+- **Activación:** 20 de octubre de 2026
+- **Punto de equilibrio:** menos de 1 mes
 
 ---
 

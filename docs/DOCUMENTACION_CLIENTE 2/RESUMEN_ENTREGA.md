@@ -96,7 +96,7 @@
 
 ### ✅ Contenido Cuantificado
 - Pérdidas actuales: $6.3M - $8M COP/mes
-- ROI en 1.85 meses
+- Se paga sola en menos de 1 mes
 - 40% reducción en morosidad
 - 90% menos errores
 
@@ -178,7 +178,7 @@
 ### Do's (Hacer)
 ✅ Enfócate en el dolor del cliente (pérdidas de $6.3M/mes)  
 ✅ Usa números reales y específicos  
-✅ Muestra el ROI claro (1.85 meses)  
+✅ Muestra el ROI claro (menos de 1 mes)  
 ✅ Ofrece garantías y casos de éxito  
 ✅ Escucha activamente sus preocupaciones  
 ✅ Sé flexible en la negociación (sin comprometer calidad)

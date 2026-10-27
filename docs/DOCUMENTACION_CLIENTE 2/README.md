@@ -2,7 +2,7 @@
 ## Sistema de Gestión Comercial e-business store(EBS)
 
 **Fecha de entrega:** 2 de febrero de 2026  
-**Cliente:** DistriDaniels - Anderson Dario Perez  
+**Cliente:** DistriDaniels - Anderson Dario Perez Rodriguez  
 **Versión:** 1.0
 
 ---
@@ -117,7 +117,7 @@ Sábados: 10:00 AM - 6:00 PM
 
 ## 🔒 Confidencialidad
 
-⚠️ **IMPORTANTE:** Esta documentación es **confidencial** y de uso exclusivo de DistriDaniels - Anderson Dario Perez. No debe ser compartida, copiada o distribuida sin autorización expresa por escrito de e-business store(EBS).
+⚠️ **IMPORTANTE:** Esta documentación es **confidencial** y de uso exclusivo de DistriDaniels - Anderson Dario Perez Rodriguez. No debe ser compartida, copiada o distribuida sin autorización expresa por escrito de e-business store(EBS).
 
 ---
 

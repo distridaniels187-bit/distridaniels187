@@ -2,7 +2,7 @@
 ## Sistema de Gestión Comercial para San Andresitos
 
 **Fecha:** 2 de febrero de 2026  
-**Cliente:** DistriDaniels - Anderson Dario Perez  
+**Cliente:** DistriDaniels - Anderson Dario Perez Rodriguez  
 **Proveedor:** Edwin Marín - e-business store(EBS)  
 **Versión:** 1.0
 

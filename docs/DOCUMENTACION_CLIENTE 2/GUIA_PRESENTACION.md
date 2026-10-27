@@ -39,7 +39,7 @@ zip -r DOCUMENTACION_EBS_Cliente.zip DOCUMENTACION_CLIENTE/
 - **Adjunto:** DOCUMENTACION_EBS_Cliente.zip
 - **Mensaje:**
   ```
-  Estimado/a Anderson Dario Perez:
+  Estimado Anderson Dario Perez Rodriguez:
 
   Adjunto encontrará la documentación completa de nuestra propuesta para 
   implementar el Sistema de Gestión Comercial e-business store(EBS).
@@ -158,11 +158,13 @@ Todo en la nube, accesible 24/7 desde cualquier dispositivo."
 ```
 "La inversión es de:
 
-• $10,000,000 implementación (pago único)
-• $400,000 mensualidad (soporte completo)
+• Licencia anual: $2.000.000
+• Descuento del 15%: -$300.000
+• Total a pagar: $1.700.000 al año (implementación,
+  hosting, backups y soporte incluidos)
 
-ROI: Se paga sola en 1.85 meses
-Ahorro anual proyectado: $65,000,000"
+Se paga sola en menos de 1 mes
+Ahorro anual proyectado: $65.000.000"
 ```
 
 **5. Próximos Pasos (1 min)**
@@ -199,9 +201,9 @@ Antes de entregar, verifica:
 ### "Es muy caro"
 **Respuesta:**  
 "Entiendo su preocupación. Comparemos: usted está perdiendo $6.3M cada mes. 
-La inversión de $10M se recupera en menos de 2 meses, y a partir del mes 3 
-comienza a generar ahorros de $5.4M mensuales recurrentes. En 12 meses habrá 
-ahorrado $65M versus una inversión de $14.8M (incluye mensualidades)."
+La licencia anual de $1.7M se recupera en menos de un mes, y a partir de ahí 
+genera ahorros de $5.4M mensuales recurrentes. En 12 meses habrá ahorrado 
+$65M versus una inversión de $1.7M."
 
 ---
 

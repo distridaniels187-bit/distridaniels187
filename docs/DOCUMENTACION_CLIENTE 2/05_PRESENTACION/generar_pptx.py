@@ -151,7 +151,7 @@ def crear_presentacion():
         "🎯 40% reducción en morosidad",
         "🎯 100% de facturas respaldadas",
         "🎯 80% menos tiempo en gestión",
-        "🎯 ROI: Retorno de inversión en 1.85 meses"
+        "🎯 ROI: Retorno de inversión en menos de 1 mes"
     ])
     
     # ========== SLIDE 7: ARQUITECTURA TÉCNICA ==========
@@ -178,13 +178,14 @@ def crear_presentacion():
     # ========== SLIDE 9: INVERSIÓN ==========
     slide9 = prs.slides.add_slide(prs.slide_layouts[5])
     agregar_contenido(slide9, "Inversión Requerida", [
-        "💵 Implementación (pago único): $10.000.000 COP",
-        "   → 50% a la firma, 50% al finalizar",
+        "💵 Licencia anual: $2.000.000 COP",
+        "🎁 Descuento 15%: -$300.000 COP",
+        "✅ Total a pagar: $1.700.000 COP al año",
+        "   → Implementación, hosting, backup, soporte y mantenimiento",
         "",
-        "💵 Mensualidad (soporte completo): $400.000 COP",
-        "   → Hosting, backup, soporte, mantenimiento",
+        "📅 Activación: 20 de octubre de 2026 (vigencia 12 meses)",
         "",
-        "📊 Punto de equilibrio: 1.85 meses"
+        "📊 Punto de equilibrio: menos de 1 mes"
     ])
     
     # ========== SLIDE 10: COMPARATIVA ANTES/DESPUÉS ==========
