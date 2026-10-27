@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { DESARROLLADOR } from '../config/empresa';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
@@ -10,6 +10,13 @@ import { normalizarProductoData } from '../lib/productosUtils';
 import { subirImagenProducto, eliminarImagenProducto, formatearTamano, TAMANO_MAXIMO_ORIGINAL } from '../lib/imagenesProductos';
 
 const LIMITE_ALERTA_STOCK_BAJO = 25;
+
+// Categorías iniciales; las nuevas se guardan en la tabla categorias_productos
+// (sql/CATEGORIAS_PRODUCTOS.sql). Esta lista solo se usa si la tabla no responde.
+const CATEGORIAS_BASE = ['Dolor y Fiebre', 'Antibióticos', 'Cuidado Digestivo', 'Vitaminas y Suplementos', 'Cremas y Unguentos', 'Ampollas', 'Gotas oftálmicas', 'Cuidado Cardiovascular', 'Salud Urinaria', 'Salud sexual e íntima', 'Primeros Auxilios', 'Cuidado Personal', 'Antigripal Cuidado Respiratorio', 'Laboratorio', 'Sistema Nervioso', 'Aseo Bebé', 'Fórmulas Lácteas'];
+
+// Roles que pueden crear categorías nuevas (igual que en sql/CATEGORIAS_PRODUCTOS.sql)
+const ROLES_CREAR_CATEGORIA = ['superadmin', 'admin', 'vendedor', 'inventario'];
 const LIMITE_STOCK_BAJO_REPORTE = 9;
 
 // Componente para subir imágenes a Supabase Storage (convertidas a WebP)
@@ -296,10 +303,10 @@ const ImportExportActions = ({ productos, productosFiltrados, setProductos }) =>
 };
 
 // Componente para reporte de inventario
-const ReporteInventario = ({ productos }) => {
+const ReporteInventario = ({ productos, categorias: categoriasProductos }) => {
   const [filtroCategoria, setFiltroCategoria] = useState('Todas');
   const [filtroEstado, setFiltroEstado] = useState('activos');
-  const categorias = ['Todas', 'Dolor y Fiebre', 'Antibióticos', 'Cuidado Digestivo', 'Vitaminas y Suplementos', 'Cremas y Unguentos', 'Ampollas', 'Gotas oftálmicas', 'Cuidado Cardiovascular', 'Salud Urinaria', 'Salud sexual e íntima', 'Primeros Auxilios', 'Cuidado Personal', 'Antigripal Cuidado Respiratorio', 'Laboratorio', 'Sistema Nervioso', 'Aseo Bebé', 'Fórmulas Lácteas'];
+  const categorias = ['Todas', ...categoriasProductos];
 
   // Filtrar productos según los filtros seleccionados
   const productosFiltrados = productos.filter(producto => {
@@ -551,7 +558,62 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [mostrarAccionesMobile, setMostrarAccionesMobile] = useState(false);
 
-  const categorias = ['Dolor y Fiebre', 'Antibióticos', 'Cuidado Digestivo', 'Vitaminas y Suplementos', 'Cremas y Unguentos', 'Ampollas', 'Gotas oftálmicas', 'Cuidado Cardiovascular', 'Salud Urinaria', 'Salud sexual e íntima', 'Primeros Auxilios', 'Cuidado Personal', 'Antigripal Cuidado Respiratorio', 'Laboratorio', 'Sistema Nervioso', 'Aseo Bebé', 'Fórmulas Lácteas'];
+  const [categoriasGuardadas, setCategoriasGuardadas] = useState(CATEGORIAS_BASE);
+  const puedeCrearCategoria = ROLES_CREAR_CATEGORIA.includes(user?.role);
+
+  // Categorías guardadas + las que ya tengan los productos, sin repetir
+  const categorias = useMemo(() => {
+    const porClave = new Map();
+    [...categoriasGuardadas, ...productos.map(p => p.categoria)]
+      .map(c => (c || '').trim())
+      .filter(Boolean)
+      .forEach(c => {
+        const clave = c.toLowerCase();
+        if (!porClave.has(clave)) porClave.set(clave, c);
+      });
+    return [...porClave.values()].sort((a, b) => a.localeCompare(b, 'es'));
+  }, [categoriasGuardadas, productos]);
+
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      const { data, error } = await supabase
+        .from('categorias_productos')
+        .select('nombre')
+        .order('nombre', { ascending: true });
+      if (error) {
+        console.warn('No se pudieron cargar las categorías, se usan las predeterminadas:', error);
+        return;
+      }
+      if (data?.length) setCategoriasGuardadas(data.map(c => c.nombre));
+    };
+    cargarCategorias();
+  }, []);
+
+  const agregarCategoria = async () => {
+    const nombre = (window.prompt('Nombre de la nueva categoría:') || '').trim().replace(/\s+/g, ' ');
+    if (!nombre) return;
+    if (nombre.length < 2 || nombre.length > 60) {
+      alert('El nombre de la categoría debe tener entre 2 y 60 caracteres.');
+      return;
+    }
+
+    const existente = categorias.find(c => c.toLowerCase() === nombre.toLowerCase());
+    if (existente) {
+      setNuevoProducto(prev => ({ ...prev, categoria: existente }));
+      return;
+    }
+
+    const { error } = await supabase.from('categorias_productos').insert({ nombre });
+    // 23505: otro usuario la creó al mismo tiempo; se puede usar igual
+    if (error && error.code !== '23505') {
+      console.error('Error creando categoría:', error);
+      alert(`No se pudo crear la categoría. Comunícate con soporte ${DESARROLLADOR.telefono}`);
+      return;
+    }
+
+    setCategoriasGuardadas(prev => [...prev, nombre]);
+    setNuevoProducto(prev => ({ ...prev, categoria: nombre }));
+  };
 
 
   // Cargar productos desde Supabase
@@ -973,7 +1035,7 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
       </header>
 
       {vistaActual === 'reporte' ? (
-        <ReporteInventario productos={productos} />
+        <ReporteInventario productos={productos} categorias={categorias} />
       ) : (
         <>
           <div className="resumen-productos">
@@ -1140,16 +1202,28 @@ const CatalogoProductos = ({ mode = 'admin' }) => {
                 
                 <div className="form-group">
                   <label>Categoría:</label>
-                  <select
-                    name="categoria"
-                    value={nuevoProducto.categoria}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Seleccione...</option>
-                    {categorias.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                  <div className="categoria-selector">
+                    <select
+                      name="categoria"
+                      value={nuevoProducto.categoria}
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Seleccione...</option>
+                      {categorias.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                    {puedeCrearCategoria && (
+                      <button
+                        type="button"
+                        className="button secondary-button boton-nueva-categoria"
+                        onClick={agregarCategoria}
+                        title="Crear una categoría nueva"
+                      >
+                        + Nueva
+                      </button>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="form-row">

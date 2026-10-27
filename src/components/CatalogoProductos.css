@@ -667,6 +667,22 @@ button {
   outline: none;
 }
 
+/* Selector de categoría con botón para crear una nueva */
+.categoria-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.categoria-selector select {
+  flex: 1;
+  min-width: 0;
+}
+
+.boton-nueva-categoria {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .form-row {
   display: flex;
   gap: 1rem;
